@@ -1,3 +1,3 @@
-module github.com/cameronbrill/go-project-template
+module github.com/cameronbrill/create-go-app
 
-go 1.17
+go 1.18

@@ -28,8 +28,8 @@ linters-settings:
 
   staticcheck:
     # Select the Go version to target. The default is '1.13'.
-    go: "1.17"
-    checks: [ "all" ]
+    go: "1.18"
+    checks: ["all"]
 
   stylecheck:
     # Select the Go version to target. The default is '1.13'.
