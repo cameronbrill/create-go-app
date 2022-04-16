@@ -3,9 +3,9 @@
 
 # create-go-app
 
-This is an executable to create different base projects I tend to use. Inspired by [create-react-app](https://github.com/facebook/create-react-app)
+This is a lightweight project generator inspired by [create-react-app](https://github.com/facebook/create-react-app)
 
-# installation
+## installation
 
 Make sure you have your `go/bin` added to your `PATH` variable, such as in your `~/.zshrc` or `~/.bash_profile`
 
@@ -18,3 +18,17 @@ In your terminal, run this command
 ```
 go install github.com/cameronbrill/create-go-app@latest
 ```
+
+## usage
+
+Running `create-go-app` will prompt you to choose a project name and template.
+
+Optionally, you can be explicit with the name and template. The following produces a bare-bones cli app called `project-name`:
+
+```
+create-go-app project-name --cli
+```
+
+## reach
+
+- [ ] inject projects into current go module at `./cmd/<project>`
