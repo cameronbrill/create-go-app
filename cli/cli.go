@@ -30,6 +30,7 @@ to quickly create a Cobra application.`,
 		var a app
 
 		a.hc = *http.DefaultClient
+
 		cmd.Flags().StringVarP(&a.name, "name", "n", "", "base project directory eg. github.com/spf13/")
 		cmd.Flags().StringVarP(&a.template, "template", "t", "", "base project directory eg. github.com/spf13/")
 
