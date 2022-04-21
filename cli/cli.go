@@ -70,7 +70,6 @@ to quickly create a Cobra application.`,
 			}
 			a.template = tmpl
 		}
-		}
 	},
 }
 
