@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/manifoldco/promptui"
+	"github.com/samber/lo"
 	"github.com/spf13/cobra"
 )
 
@@ -45,6 +46,29 @@ to quickly create a Cobra application.`,
 			if name != "" {
 				a.name = name
 			}
+		}
+		if a.template == "" {
+			var res []BranchRes
+			err := fetchJSON(GithubAPIHost+TemplateRepoPath+BranchesEndpoint, a.hc, &res)
+			if err != nil {
+				fmt.Printf("Failed to fetch branches: %v\n", err)
+				return
+			}
+			branchNames := lo.Map[BranchRes, string](res, func(b BranchRes, _ int) string {
+				return b.Name
+			})
+
+			prompt := promptui.Select{
+				Label: "Select Project Template",
+				Items: branchNames,
+			}
+			_, tmpl, err := prompt.Run()
+			if err != nil {
+				fmt.Printf("Prompt failed %v\n", err)
+				return
+			}
+			a.template = tmpl
+		}
 		}
 	},
 }
