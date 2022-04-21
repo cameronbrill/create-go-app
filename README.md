@@ -3,7 +3,7 @@
 
 # create-go-app
 
-This is a lightweight project generator inspired by [create-react-app](https://github.com/facebook/create-react-app)
+This is a [create-react-app](https://github.com/facebook/create-react-app) for [featherweight Go project templates](https://github.com/cameronbrill/go-project-template).
 
 ## installation
 
