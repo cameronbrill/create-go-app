@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/manifoldco/promptui"
 	"github.com/samber/lo"
 	"github.com/spf13/cobra"
@@ -70,7 +72,39 @@ to quickly create a Cobra application.`,
 			}
 			a.template = tmpl
 		}
+
+		fmt.Printf("name: %s, template: %s\n", a.name, a.template)
+		ref := plumbing.NewBranchReferenceName(a.template)
+		repo, err := git.PlainClone(a.name, false, &git.CloneOptions{
+			URL:           GithubRepoHost + TemplateRepoPath,
+			ReferenceName: ref,
+			SingleBranch:  true,
+		})
+		if err != nil {
+			fmt.Printf("Failed to clone template: %v\nref: %s\n", err, ref)
+			return
 		}
+		cfg, err := repo.Config()
+		if err != nil {
+			fmt.Printf("Failed to get config: %v\n", err)
+			return
+		}
+		fmt.Printf("config: %+v\n", cfg)
+		for _, r := range cfg.Remotes {
+			err := repo.DeleteRemote(r.Name)
+			if err != nil {
+				fmt.Printf("Failed to delete remote: %v\n", err)
+				return
+			}
+		}
+		//		err = repo.SetConfig(&config.Config{
+		//			Remotes: make(map[string]*config.RemoteConfig),
+		//			URLs:    make(map[string]*config.URL),
+		//		})
+		//		if err != nil {
+		//			fmt.Printf("Failed to overwrite config: %v\n", err)
+		//			return
+		//		}
 	},
 }
 
@@ -81,7 +115,6 @@ type app struct {
 }
 
 func Run() int {
-
 	err := rootCmd.Execute()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
