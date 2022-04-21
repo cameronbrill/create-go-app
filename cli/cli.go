@@ -27,8 +27,8 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var a app
 
-		cmd.Flags().StringVarP(&a.name, "name", "n", defaultName, "base project directory eg. github.com/spf13/")
-		cmd.Flags().StringVarP(&a.template, "template", "t", defaultTemplate, "base project directory eg. github.com/spf13/")
+		cmd.Flags().StringVarP(&a.name, "name", "n", "", "base project directory eg. github.com/spf13/")
+		cmd.Flags().StringVarP(&a.template, "template", "t", "", "base project directory eg. github.com/spf13/")
 
 		if a.name == defaultName {
 			prompt := promptui.Prompt{
