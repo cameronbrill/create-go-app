@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/manifoldco/promptui"
@@ -27,6 +28,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var a app
 
+		a.hc = *http.DefaultClient
 		cmd.Flags().StringVarP(&a.name, "name", "n", "", "base project directory eg. github.com/spf13/")
 		cmd.Flags().StringVarP(&a.template, "template", "t", "", "base project directory eg. github.com/spf13/")
 
@@ -48,6 +50,7 @@ to quickly create a Cobra application.`,
 }
 
 type app struct {
+	hc       http.Client
 	name     string
 	template string // references a branch name in https://github.com/cameronbrill/go-project-template
 }
