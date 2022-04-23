@@ -32,3 +32,8 @@ create-go-app project-name --cli
 ## reach
 
 - [ ] inject projects into current go module at `./cmd/<project>`
+
+
+### disclaimer
+
+This repository is not associated with [create-react-app](https://github.com/facebook/create-react-app) or [create-go-app/cli](https://github.com/create-go-app/cli) in any way. This is my personal side project.
