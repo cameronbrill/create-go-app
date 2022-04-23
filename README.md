@@ -3,7 +3,7 @@
 
 # create-go-app
 
-This is a [create-react-app](https://github.com/facebook/create-react-app) based on [go-project-template](https://github.com/cameronbrill/go-project-template).
+This is a [create-react-app](https://github.com/facebook/create-react-app) for Go projects, based on [go-project-template](https://github.com/cameronbrill/go-project-template).
 
 ## installation
 
