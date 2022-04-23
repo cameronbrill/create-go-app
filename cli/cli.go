@@ -80,6 +80,11 @@ to quickly create a Cobra application.`,
 			fmt.Printf("Failed to clone template: %v\nref: %s\n", err, ref)
 			return
 		}
+		err = os.RemoveAll(fmt.Sprintf("./%s/.git/refs/remotes", a.directory))
+		if err != nil {
+			fmt.Printf("Failed to remove .git: %v\n", err)
+			return
+		}
 	},
 }
 
