@@ -69,9 +69,9 @@ to quickly create a Cobra application.`,
 			a.template = tmpl
 		}
 
-		fmt.Printf("name: %s, template: %s\n", a.name, a.template)
+		a.directory = getProjectName(a.name)
 		ref := plumbing.NewBranchReferenceName(a.template)
-		_, err := git.PlainClone(a.name, false, &git.CloneOptions{
+		_, err := git.PlainClone(a.directory, false, &git.CloneOptions{
 			URL:           GithubRepoHost + TemplateRepoPath,
 			ReferenceName: ref,
 			SingleBranch:  true,
@@ -83,10 +83,18 @@ to quickly create a Cobra application.`,
 	},
 }
 
+func getProjectName(s string) string {
+	if _, err := os.Stat(fmt.Sprintf("./%s", s)); !os.IsNotExist(err) {
+		return getProjectName(s + "-1")
+	}
+	return s
+}
+
 type app struct {
-	hc       http.Client
-	name     string
-	template string // references a branch name in https://github.com/cameronbrill/go-project-template
+	hc        http.Client
+	name      string
+	directory string
+	template  string // references a branch name in https://github.com/cameronbrill/go-project-template
 }
 
 func Run() int {
