@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 
@@ -69,9 +71,14 @@ to quickly create a Cobra application.`,
 			a.template = tmpl
 		}
 
-		a.directory = getProjectName(a.name)
+		var err error
+		a.directory, err = getProjectName(a.name)
+		if err != nil {
+			fmt.Printf("Failed to get project name: %v\n", err)
+			return
+		}
 		ref := plumbing.NewBranchReferenceName(a.template)
-		_, err := git.PlainClone(a.directory, false, &git.CloneOptions{
+		_, err = git.PlainClone(a.directory, false, &git.CloneOptions{
 			URL:           GithubRepoHost + TemplateRepoPath,
 			ReferenceName: ref,
 			SingleBranch:  true,
@@ -88,11 +95,13 @@ to quickly create a Cobra application.`,
 	},
 }
 
-func getProjectName(s string) string {
-	if _, err := os.Stat(fmt.Sprintf("./%s", s)); !os.IsNotExist(err) {
+func getProjectName(s string) (string, error) {
+	if _, err := os.Stat(fmt.Sprintf("./%s", s)); errors.Is(err, fs.ErrNotExist) {
 		return getProjectName(s + "-1")
+	} else if err != nil {
+		return "", err
 	}
-	return s
+	return s, nil
 }
 
 type app struct {
