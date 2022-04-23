@@ -71,7 +71,7 @@ to quickly create a Cobra application.`,
 
 		fmt.Printf("name: %s, template: %s\n", a.name, a.template)
 		ref := plumbing.NewBranchReferenceName(a.template)
-		repo, err := git.PlainClone(a.name, false, &git.CloneOptions{
+		_, err := git.PlainClone(a.name, false, &git.CloneOptions{
 			URL:           GithubRepoHost + TemplateRepoPath,
 			ReferenceName: ref,
 			SingleBranch:  true,
@@ -80,27 +80,6 @@ to quickly create a Cobra application.`,
 			fmt.Printf("Failed to clone template: %v\nref: %s\n", err, ref)
 			return
 		}
-		cfg, err := repo.Config()
-		if err != nil {
-			fmt.Printf("Failed to get config: %v\n", err)
-			return
-		}
-		fmt.Printf("config: %+v\n", cfg)
-		for _, r := range cfg.Remotes {
-			err := repo.DeleteRemote(r.Name)
-			if err != nil {
-				fmt.Printf("Failed to delete remote: %v\n", err)
-				return
-			}
-		}
-		//		err = repo.SetConfig(&config.Config{
-		//			Remotes: make(map[string]*config.RemoteConfig),
-		//			URLs:    make(map[string]*config.URL),
-		//		})
-		//		if err != nil {
-		//			fmt.Printf("Failed to overwrite config: %v\n", err)
-		//			return
-		//		}
 	},
 }
 
