@@ -12,10 +12,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	defaultName = "create-go-app"
-)
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cmd",
@@ -36,7 +32,7 @@ to quickly create a Cobra application.`,
 		cmd.Flags().StringVarP(&a.name, "name", "n", "", "base project directory eg. github.com/spf13/")
 		cmd.Flags().StringVarP(&a.template, "template", "t", "", "base project directory eg. github.com/spf13/")
 
-		if a.name == defaultName {
+		if a.name == "" {
 			prompt := promptui.Prompt{
 				Label: "Project Name (leave blank for create-go-app)",
 			}
