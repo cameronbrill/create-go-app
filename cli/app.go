@@ -21,8 +21,7 @@ type app struct {
 func (a *app) clone() (err error) {
 	a.directory, err = getProjectName(a.name)
 	if err != nil {
-		fmt.Printf("Failed to get project name: %v\n", err)
-		return
+		return fmt.Errorf("Failed to get project name %s: %w", a.name, err)
 	}
 	ref := plumbing.NewBranchReferenceName(a.template)
 	_, err = git.PlainClone(a.directory, false, &git.CloneOptions{
@@ -31,21 +30,19 @@ func (a *app) clone() (err error) {
 		SingleBranch:  true,
 	})
 	if err != nil {
-		fmt.Printf("Failed to clone template: %v\nref: %s\n", err, ref)
-		return
+		return fmt.Errorf("Failed to clone template: %w\nref: %s", err, ref)
 	}
 	err = os.RemoveAll(fmt.Sprintf("./%s/.git/refs/remotes", a.directory))
 	if err != nil {
-		fmt.Printf("Failed to remove .git: %v\n", err)
-		return
+		return fmt.Errorf("Failed to remove .git: %w", err)
 	}
 	return nil
 }
 
 func getProjectName(s string) (string, error) {
-	if _, err := os.Stat(fmt.Sprintf("./%s", s)); errors.Is(err, fs.ErrNotExist) {
+	if f, err := os.Stat(fmt.Sprintf("./%s", s)); f != nil {
 		return getProjectName(s + "-1")
-	} else if err != nil {
+	} else if err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return "", err
 	}
 	return s, nil
