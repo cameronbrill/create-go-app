@@ -13,8 +13,12 @@ func TestClone(t *testing.T) {
 	a.name = "test-app"
 	a.template = "main"
 	err := a.clone()
+	dir := a.directory
 	defer func() {
-		err := os.RemoveAll(fmt.Sprintf("./%s", a.directory))
+		if dir == "" {
+			panic("tried to remove active directory")
+		}
+		err := os.RemoveAll(fmt.Sprintf("./%s", dir))
 		if err != nil {
 			t.Error(err)
 		}
@@ -27,7 +31,10 @@ func TestClone(t *testing.T) {
 	}
 	err = a.clone()
 	defer func() {
-		err := os.RemoveAll(fmt.Sprintf("./%s-1", a.directory))
+		if a.directory == "" {
+			panic("tried to remove active directory")
+		}
+		err := os.RemoveAll(fmt.Sprintf("./%s-1", dir))
 		if err != nil {
 			t.Error(err)
 		}
