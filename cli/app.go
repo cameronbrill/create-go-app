@@ -43,9 +43,9 @@ func (a *app) clone() (err error) {
 }
 
 func getProjectName(s string) (string, error) {
-	if _, err := os.Stat(fmt.Sprintf("./%s", s)); errors.Is(err, fs.ErrNotExist) {
+	if f, err := os.Stat(fmt.Sprintf("./%s", s)); f != nil {
 		return getProjectName(s + "-1")
-	} else if err != nil {
+	} else if err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return "", err
 	}
 	return s, nil
