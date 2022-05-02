@@ -4,11 +4,20 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
+	"syscall"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+)
+
+const (
+	srcName       = "go-project-template"
+	readmeSrcName = "go project template"
 )
 
 type app struct {
@@ -36,6 +45,10 @@ func (a *app) clone() (err error) {
 	if err != nil {
 		return fmt.Errorf("Failed to remove .git: %w", err)
 	}
+	err = replaceAllInDir(a.directory, a.name, srcName, readmeSrcName)
+	if err != nil {
+		return fmt.Errorf("Failed to replace strings: %w", err)
+	}
 	return nil
 }
 
@@ -46,4 +59,34 @@ func getProjectName(s string) (string, error) {
 		return "", err
 	}
 	return s, nil
+}
+
+func replaceAllInDir(dir, repl string, orig ...string) error {
+	if len(orig) == 0 {
+		return fmt.Errorf("no strings to replace")
+	}
+	err := filepath.Walk(fmt.Sprintf("./%s", dir),
+		func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() {
+				return nil
+			}
+			if err != nil {
+				return err
+			}
+			fileData, err := ioutil.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			fileString := string(fileData)
+			for _, s := range orig {
+				fileString = strings.ReplaceAll(fileString, s, repl)
+			}
+			fileData = []byte(fileString)
+			err = ioutil.WriteFile(path, fileData, syscall.O_RDWR)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	return err
 }
